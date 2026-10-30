@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Omiyage dal Giappone</title>
+<meta name="description" content="Partiamo per il Giappone in pieno autunno: scrivi il tuo nome e scegli che tipo di regalo vorresti ricevere al nostro ritorno.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Omiyage dal Giappone">
+<meta property="og:description" content="Che regalo vorresti dal Giappone? Scrivi il tuo nome e scegli la categoria.">
+<meta property="og:url" content="https://omiyage2026.github.io/">
+<meta property="og:image" content="https://omiyage2026.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F6F1E7">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root {
+  /* Layout: testata centrata con l'illustrazione chibi, titolo e due schede (il viaggio / il modulo). Carta washi sullo sfondo e qualche foglia d'acero che cade. */
+  --washi: #F6F1E7;
+  --carta: #FFFDF8;
+  --sumi: #2B2522;
+  --cenere: #6F635A;
+  --segnaposto: #A2958A;
+  --linea: #E6DCCD;
+  --linea-forte: #D4C5B1;
+  --momiji: #B8432F;
+  --momiji-scuro: #933222;
+  --cachi: #D9792E;
+  --ginkgo: #D6A23A;
+  --ginkgo-testo: #8A6418;
+  --matcha: #5A6B45;
+  --pesca: #F6DFC9;
+  --fuoco: rgba(184, 67, 47, 0.18);
+  --ombra: 0 1px 2px rgba(60, 40, 25, 0.06), 0 8px 24px rgba(60, 40, 25, 0.07);
+  --serif: "Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --sans: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--washi);
+  /* fibre leggere della carta washi */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .25 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23f)'/%3E%3C/svg%3E");
+  color: var(--sumi);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+.foglie { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.foglia {
+  position: absolute;
+  top: -40px;
+  width: var(--s, 22px);
+  height: var(--s, 22px);
+  opacity: var(--o, .6);
+  animation: cade var(--d, 16s) linear var(--r, 0s) infinite;
+}
+.foglia svg { width: 100%; height: 100%; display: block; animation: ondeggia calc(var(--d, 16s) / 4) ease-in-out var(--r, 0s) infinite alternate; }
+@keyframes cade {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--x, 40px), 110vh, 0); }
+}
+@keyframes ondeggia {
+  from { transform: rotate(-35deg) translateX(-14px); }
+  to { transform: rotate(40deg) translateX(14px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .foglie { display: none; }
+  * { scroll-behavior: auto !important; }
+}
+
+.pagina {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: max(28px, env(safe-area-inset-top)) 16px 40px;
+}
+
+/* Testata */
+.testata { text-align: center; }
+.ritratto { position: relative; width: min(380px, 84vw); margin: 0 auto; }
+.ritratto img { display: block; width: 100%; height: auto; }
+.hanko {
+  position: absolute;
+  right: 2%;
+  bottom: 12%;
+  width: 46px;
+  padding: 7px 0;
+  background: var(--momiji);
+  color: var(--carta);
+  border-radius: 6px;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.1;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(6deg);
+  box-shadow: inset 0 0 0 2px rgba(255, 253, 248, .35);
+}
+.occhiello {
+  margin: 18px 0 6px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--momiji);
+}
+.occhiello span { color: var(--cenere); letter-spacing: .3em; }
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: clamp(40px, 9vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -.01em;
+}
+h1 em { display: block; font-style: normal; font-weight: 500; font-size: .5em; color: var(--cenere); margin-top: 8px; letter-spacing: .02em; }
+.sottotitolo { max-width: 34em; margin: 16px auto 0; color: var(--cenere); font-size: 17px; }
+.sottotitolo b { color: var(--sumi); font-weight: 700; }
+.firma { margin: 14px 0 0; font-family: var(--serif); font-size: 17px; color: var(--sumi); }
+.firma::before, .firma::after { content: ""; display: inline-block; width: 28px; height: 1px; background: var(--linea-forte); vertical-align: middle; margin: 0 12px; }
+
+/* Schede */
+.schede {
+  display: flex;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 32px auto 0;
+  padding: 4px;
+  background: rgba(230, 220, 205, .55);
+  border-radius: 999px;
+}
+.scheda {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--cenere);
+  font: 500 15px/1 var(--sans);
+  padding: 12px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.scheda:hover { color: var(--sumi); }
+.scheda[aria-selected="true"] { background: var(--carta); color: var(--sumi); box-shadow: 0 1px 3px rgba(60, 40, 25, .12); }
+.scheda .kanji { font-family: var(--serif); font-weight: 700; color: var(--momiji); }
+.scheda:focus-visible, .bottone:focus-visible, .categoria input:focus-visible + .card, .link:focus-visible { outline: 2px solid var(--momiji); outline-offset: 2px; }
+
+.pannello { margin-top: 24px; animation: entra .35s ease both; }
+.pannello[hidden] { display: none; }
+@keyframes entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.foglio {
+  background: var(--carta);
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  box-shadow: var(--ombra);
+  padding: clamp(22px, 5vw, 40px);
+}
+h2 { margin: 0 0 8px; font-family: var(--serif); font-weight: 700; font-size: clamp(24px, 5vw, 30px); line-height: 1.2; }
+.intro { margin: 0; color: var(--cenere); }
+
+/* Scheda "Il viaggio" */
+.cose { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; align-items: start; margin-top: 20px; }
+.cose .jp { font-family: var(--serif); font-size: 44px; line-height: 1; color: var(--momiji); writing-mode: vertical-rl; letter-spacing: 4px; }
+.cose p { margin: 0; }
+.passi { list-style: none; padding: 0; margin: 28px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.passi li { padding: 18px 16px; border: 1px solid var(--linea); border-radius: 14px; background: var(--washi); }
+.passi .num { display: block; font-family: var(--serif); font-weight: 800; font-size: 26px; line-height: 1; color: var(--momiji); margin-bottom: 10px; }
+.passi b { display: block; font-size: 15px; margin-bottom: 2px; }
+.passi span:last-child { font-size: 14px; color: var(--cenere); }
+.azioni { margin-top: 28px; display: flex; justify-content: center; }
+
+.bottone {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: var(--momiji);
+  color: var(--carta);
+  font: 700 16px/1 var(--sans);
+  padding: 16px 28px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: background .2s, transform .15s;
+}
+.bottone:hover { background: var(--momiji-scuro); }
+.bottone:active { transform: translateY(1px); }
+.bottone[disabled] { opacity: .65; cursor: progress; }
+.bottone.chiaro { background: transparent; color: var(--sumi); box-shadow: inset 0 0 0 1.5px var(--linea-forte); }
+.bottone.chiaro:hover { background: var(--washi); }
+.bottone svg { width: 18px; height: 18px; }
+
+/* Modulo */
+form { margin-top: 24px; }
+.campo { margin-bottom: 26px; }
+.etichetta { display: block; font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+.etichetta small { font-weight: 400; color: var(--cenere); font-size: 14px; }
+input[type="text"], textarea {
+  width: 100%;
+  font: 400 16px/1.5 var(--sans);
+  color: var(--sumi);
+  background: var(--washi);
+  border: 1.5px solid var(--linea);
+  border-radius: 12px;
+  padding: 13px 15px;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+textarea { min-height: 96px; resize: vertical; }
+input[type="text"]::placeholder, textarea::placeholder { color: var(--segnaposto); }
+input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--momiji); background: var(--carta); box-shadow: 0 0 0 4px var(--fuoco); }
+fieldset { border: 0; padding: 0; margin: 0 0 26px; min-width: 0; }
+legend { padding: 0; }
+.categorie { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.categoria { position: relative; display: block; cursor: pointer; }
+.categoria input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 14px 13px;
+  border: 1.5px solid var(--linea);
+  border-radius: 14px;
+  background: var(--carta);
+  transition: border-color .2s, background .2s, box-shadow .2s, transform .15s;
+}
+.categoria:hover .card { border-color: var(--linea-forte); transform: translateY(-1px); }
+.card .icona {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--washi);
+  color: var(--momiji);
+  display: grid;
+  place-items: center;
+  transition: background .2s, color .2s;
+}
+.card .icona svg { width: 22px; height: 22px; }
+.card b { font-size: 15px; line-height: 1.25; }
+.card span:last-child { font-size: 13px; line-height: 1.4; color: var(--cenere); }
+.categoria input:checked + .card { border-color: var(--momiji); background: #FDF4EE; box-shadow: 0 0 0 3px var(--fuoco); }
+.categoria input:checked + .card .icona { background: var(--momiji); color: var(--carta); }
+.honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.errore { display: none; margin: 0 0 16px; padding: 12px 14px; border-radius: 12px; background: #FBE9E4; color: var(--momiji-scuro); font-size: 15px; }
+.errore.visibile { display: block; }
+.invio { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.invio p { margin: 0; font-size: 14px; color: var(--cenere); max-width: 26em; }
+
+/* Conferma */
+.grazie { text-align: center; }
+.grazie .jp { font-family: var(--serif); font-size: 15px; letter-spacing: .4em; color: var(--momiji); margin: 0; }
+.grazie h2 { margin-top: 8px; }
+.scelta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 6px;
+  padding: 10px 18px 10px 10px;
+  border-radius: 999px;
+  background: #FDF4EE;
+  border: 1.5px solid var(--momiji);
+  font-weight: 700;
+}
+.scelta .icona { width: 32px; height: 32px; border-radius: 50%; background: var(--momiji); color: var(--carta); display: grid; place-items: center; }
+.scelta .icona svg { width: 18px; height: 18px; }
+.grazie .nota { color: var(--cenere); max-width: 30em; margin: 10px auto 0; }
+.grazie .azioni { gap: 10px; flex-wrap: wrap; }
+.inviate { margin: 26px auto 0; max-width: 420px; text-align: left; border-top: 1px solid var(--linea); padding-top: 16px; }
+.inviate h3 { margin: 0 0 8px; font-size: 13px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--cenere); }
+.inviate ul { list-style: none; margin: 0; padding: 0; }
+.inviate li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 15px; border-bottom: 1px dashed var(--linea); }
+.inviate li:last-child { border-bottom: 0; }
+.inviate li span:last-child { color: var(--cenere); text-align: right; }
+
+footer { margin-top: 36px; text-align: center; color: var(--cenere); font-size: 14px; }
+footer .sigillo { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-bottom: 8px; border-radius: 6px; background: var(--momiji); color: var(--carta); font-family: var(--serif); font-weight: 800; font-size: 17px; transform: rotate(-5deg); }
+footer p { margin: 0; }
+
+@media (max-width: 600px) {
+  .passi { grid-template-columns: 1fr; }
+  .passi li { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: baseline; }
+  .passi .num { grid-row: span 2; margin: 0; }
+  .categorie { grid-template-columns: repeat(2, 1fr); }
+  .categoria:last-child { grid-column: 1 / -1; }
+  .scheda { padding: 12px 16px; font-size: 14px; }
+  .invio .bottone { width: 100%; }
+  .cose .jp { font-size: 36px; }
+}
+@media (max-width: 360px) {
+  .scheda .kanji { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="foglie" aria-hidden="true"></div>
+
+<main class="pagina">
+  <header class="testata">
+    <div class="ritratto">
+      <img src="chibi.svg" width="400" height="380" alt="Noi due in versione chibi, in kimono, tra le foglie d'acero">
+      <div class="hanko" aria-hidden="true">土産</div>
+    </div>
+    <p class="occhiello">紅葉 <span>·</span> Autunno in Giappone</p>
+    <h1>Omiyage<em>regali dal Giappone</em></h1>
+    <p class="sottotitolo">Partiamo per il Giappone nella stagione del <b>kōyō</b>, quando gli aceri si tingono di rosso. Come vuole la tradizione, torneremo con un pensiero per ognuno di voi: diteci cosa vi piacerebbe ricevere.</p>
+    <p class="firma">Sergio &amp; Davide</p>
+  </header>
+
+  <div class="schede" role="tablist" aria-label="Sezioni">
+    <button class="scheda" role="tab" id="tab-viaggio" aria-controls="viaggio" aria-selected="true"><span class="kanji" aria-hidden="true">旅</span>Il viaggio</button>
+    <button class="scheda" role="tab" id="tab-regalo" aria-controls="regalo" aria-selected="false" tabindex="-1"><span class="kanji" aria-hidden="true">贈</span>Scegli il tuo regalo</button>
+  </div>
+
+  <section class="pannello" id="viaggio" role="tabpanel" aria-labelledby="tab-viaggio" tabindex="0">
+    <div class="foglio">
+      <h2>Che cos'è un omiyage</h2>
+      <div class="cose">
+        <div class="jp" aria-hidden="true">お土産</div>
+        <div>
+          <p>In Giappone chi parte per un viaggio torna sempre con un piccolo regalo per chi è rimasto a casa: si chiama <b>omiyage</b>. Non deve essere costoso, conta il pensiero e il legame con il luogo visitato.</p>
+          <p style="margin-top:10px">Noi vogliamo portarne uno a ciascuno di voi, ma ci serve una mano a capire cosa vi farebbe davvero piacere.</p>
+        </div>
+      </div>
+      <ol class="passi">
+        <li><span class="num" aria-hidden="true">一</span><b>Scrivi il tuo nome</b><span>Così sappiamo per chi è il regalo.</span></li>
+        <li><span class="num" aria-hidden="true">二</span><b>Scegli una categoria</b><span>Cucina, Studio Ghibli, souvenir classici e altro.</span></li>
+        <li><span class="num" aria-hidden="true">三</span><b>Al resto pensiamo noi</b><span>Lo cerchiamo in viaggio e te lo portiamo al ritorno.</span></li>
+      </ol>
+      <div class="azioni">
+        <button class="bottone" type="button" data-vai="regalo">Scegli il tuo regalo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="pannello" id="regalo" role="tabpanel" aria-labelledby="tab-regalo" tabindex="0" hidden>
+    <div class="foglio" id="foglio-modulo">
+      <h2>Il tuo omiyage</h2>
+      <p class="intro">Bastano due scelte. Se vuoi registrare anche qualcun altro, potrai farlo subito dopo.</p>
+      <form id="modulo" novalidate>
+        <div class="campo">
+          <label class="etichetta" for="f-nome">Come ti chiami?</label>
+          <input id="f-nome" name="nome" type="text" autocomplete="name" maxlength="80" placeholder="Nome e cognome" required>
+        </div>
+        <fieldset>
+          <legend class="etichetta">Che tipo di regalo ti piacerebbe?</legend>
+          <div class="categorie" id="categorie"></div>
+        </fieldset>
+        <div class="campo">
+          <label class="etichetta" for="f-note">Qualche dettaglio in più? <small>(facoltativo)</small></label>
+          <textarea id="f-note" name="note" maxlength="400" placeholder="Il tuo film Ghibli preferito, gusti, allergie, cose che hai già…"></textarea>
+        </div>
+        <div class="honey" aria-hidden="true">
+          <label for="f-honey">Lascia vuoto</label>
+          <input id="f-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <p class="errore" id="errore" role="alert"></p>
+        <div class="invio">
+          <p>La tua scelta arriva solo a noi due.</p>
+          <button class="bottone" type="submit" id="invia">Registrati
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="foglio grazie" id="grazie" hidden tabindex="-1">
+      <p class="jp" aria-hidden="true">ありがとう</p>
+      <h2 id="grazie-titolo">Grazie!</h2>
+      <div class="scelta" id="grazie-scelta"></div>
+      <p class="nota">Ce lo siamo segnato: lo cercheremo per te durante il viaggio.</p>
+      <div class="azioni">
+        <button class="bottone chiaro" type="button" id="altro">Registra un'altra persona</button>
+      </div>
+      <div class="inviate" id="inviate" hidden>
+        <h3>Inviate da questo dispositivo</h3>
+        <ul id="inviate-elenco"></ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="sigillo" aria-hidden="true">秋</div>
+    <p>Con affetto, Sergio &amp; Davide</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // Le registrazioni arrivano per email tramite FormSubmit, come per i siti di Natale.
+  var FORM_ENDPOINT = 'https://formsubmit.co/ajax/sergio.dimino@live.it';
+  var K_INVIATE = 'omiyage-inviate';
+
+  var FOGLIA = 'M-7.7,6.4 C-10.4,9.7 -18.9,8.4 -21.6,7.9 C-19.9,5.7 -14.2,-0.7 -20.0,1.0 C-21.6,1.9 -31.0,-5.5 -34.0,-8.5 C-30.0,-9.7 -18.2,-11.8 -16.8,-10.9 C-23.4,-15.2 -27.1,-30.1 -27.7,-35.5 C-22.6,-33.6 -9.1,-26.4 -6.5,-18.9 C-10.1,-29.3 -3.1,-44.9 0.0,-50.0 C3.1,-44.9 10.1,-29.3 6.5,-18.9 C9.1,-26.4 22.6,-33.6 27.7,-35.5 C27.1,-30.1 23.4,-15.2 16.8,-10.9 C18.2,-11.8 30.0,-9.7 34.0,-8.5 C31.0,-5.5 21.6,1.9 20.0,1.0 C14.2,-0.7 19.9,5.7 21.6,7.9 C18.9,8.4 10.4,9.7 7.7,6.4 Z';
+
+  // Icone a tratto, 24x24
+  var CATEGORIE = [
+    { id: 'cucina', nome: 'Cucina', desc: 'Bacchette, ciotole, utensili e ingredienti',
+      icona: '<path d="M3 12h18a9 9 0 0 1-18 0Z"/><path d="M9 21h6"/><path d="M13 3l-3 7M19 4l-5 6"/>' },
+    { id: 'ghibli', nome: 'Studio Ghibli', desc: 'Peluche e oggetti dai film di Miyazaki',
+      icona: '<path d="M4.5 10.5C4.5 7 7.8 5 12 5s7.5 2 7.5 5.5Z"/><path d="M12 5c0-1.2.6-2 1.6-2.4"/><path d="M6.5 10.5c.3 5.6 2.6 10 5.5 10s5.2-4.4 5.5-10"/><path d="M8.5 8l2-2.6M12 8.5 13.8 5.4M15.5 8.4l.9-2.2"/>' },
+    { id: 'classici', nome: 'Souvenir classici', desc: 'Maneki-neko, daruma, omamori, fūrin',
+      icona: '<path d="M12 3c-4.6 0-7 3.6-7 8.5S8 21 12 21s7-4.6 7-9.5S16.6 3 12 3Z"/><ellipse cx="12" cy="10" rx="3.6" ry="3"/><path d="M8.5 17h7"/>' },
+    { id: 'dolci', nome: 'Dolci e snack', desc: 'KitKat ai gusti giapponesi, wagashi, caramelle',
+      icona: '<path d="M4 20 20 4"/><circle cx="9" cy="15" r="2.8"/><circle cx="13" cy="11" r="2.8"/><circle cx="17" cy="7" r="2.8"/>' },
+    { id: 'te', nome: 'Tè e sake', desc: 'Matcha, sencha, hōjicha o una bottiglia di sake',
+      icona: '<path d="M5 10h12l-1.4 8.2A2 2 0 0 1 13.6 20H8.4a2 2 0 0 1-2-1.8Z"/><path d="M17 12.5h1.5a2 2 0 0 1 0 4H16.6"/><path d="M9 3.5c-1 1.2 1 2 0 3.3M13 3.5c-1 1.2 1 2 0 3.3"/>' },
+    { id: 'anime', nome: 'Anime e manga', desc: 'Figure, gadget e fumetti',
+      icona: '<path d="M4 5h16v11H10l-4 4v-4H4Z"/><path d="m12 7.5.9 1.9 2.1.3-1.5 1.4.4 2.1-1.9-1-1.9 1 .4-2.1L9 9.7l2.1-.3Z"/>' },
+    { id: 'cancelleria', nome: 'Cancelleria', desc: 'Penne, quaderni e washi tape',
+      icona: '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/><path d="m14.5 5.5 3 3"/>' },
+    { id: 'beauty', nome: 'Beauty e skincare', desc: 'Maschere, creme e cosmetici giapponesi',
+      icona: '<rect x="7" y="9" width="10" height="12" rx="2.5"/><path d="M10 9V6h4v3"/><path d="M12 6V3h4"/><path d="M10 14h4"/>' },
+    { id: 'sorpresa', nome: 'Sorprendetemi', desc: 'Scegliete voi, mi fido',
+      icona: '<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8"/><path d="M12 8v12"/><path d="M12 8c-1.5-3.5-5.5-3.5-5-1 .3 1.3 2.8 1 5 1Zm0 0c1.5-3.5 5.5-3.5 5-1-.3 1.3-2.8 1-5 1Z"/>' }
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function svgIcona(c) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + c.icona + '</svg>';
+  }
+  function categoria(id) {
+    for (var i = 0; i < CATEGORIE.length; i++) if (CATEGORIE[i].id === id) return CATEGORIE[i];
+    return null;
+  }
+  var ls = {
+    get: function (k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  // Foglie che cadono sullo sfondo
+  (function () {
+    var box = document.querySelector('.foglie');
+    var colori = ['#B8432F', '#D9792E', '#D6A23A', '#C4562F'];
+    var n = window.innerWidth < 600 ? 7 : 12;
+    for (var i = 0; i < n; i++) {
+      var el = document.createElement('div');
+      el.className = 'foglia';
+      var d = 13 + Math.random() * 12;
+      el.style.left = (Math.random() * 100) + '%';
+      el.style.setProperty('--s', (14 + Math.random() * 16).toFixed(0) + 'px');
+      el.style.setProperty('--o', (0.3 + Math.random() * 0.3).toFixed(2));
+      el.style.setProperty('--d', d.toFixed(1) + 's');
+      el.style.setProperty('--r', (-Math.random() * d).toFixed(1) + 's');
+      el.style.setProperty('--x', ((Math.random() - 0.5) * 240).toFixed(0) + 'px');
+      el.innerHTML = '<svg viewBox="-36 -52 72 64"><path d="' + FOGLIA + '" fill="' + colori[i % colori.length] + '"/></svg>';
+      box.appendChild(el);
+    }
+  })();
+
+  // Schede
+  var schede = [].slice.call(document.querySelectorAll('[role="tab"]'));
+  function apri(id, focus) {
+    schede.forEach(function (t) {
+      var on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      $(t.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) t.focus();
+    });
+    if (history.replaceState) history.replaceState(null, '', id === 'regalo' ? '#regalo' : location.pathname + location.search);
+  }
+  schede.forEach(function (t, i) {
+    t.addEventListener('click', function () { apri(t.getAttribute('aria-controls')); });
+    t.addEventListener('keydown', function (e) {
+      var j = null;
+      if (e.key === 'ArrowRight') j = (i + 1) % schede.length;
+      if (e.key === 'ArrowLeft') j = (i - 1 + schede.length) % schede.length;
+      if (e.key === 'Home') j = 0;
+      if (e.key === 'End') j = schede.length - 1;
+      if (j !== null) { e.preventDefault(); apri(schede[j].getAttribute('aria-controls'), true); }
+    });
+  });
+  document.querySelectorAll('[data-vai]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      apri(b.getAttribute('data-vai'));
+      document.querySelector('.schede').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function () { var n = $('f-nome'); if (n && !$('foglio-modulo').hidden) n.focus({ preventScroll: true }); }, 350);
+    });
+  });
+  if (location.hash === '#regalo') apri('regalo');
+
+  // Categorie del modulo
+  $('categorie').innerHTML = CATEGORIE.map(function (c) {
+    return '<label class="categoria"><input type="radio" name="categoria" value="' + c.id + '">' +
+      '<span class="card"><span class="icona">' + svgIcona(c) + '</span><b>' + esc(c.nome) + '</b><span>' + esc(c.desc) + '</span></span></label>';
+  }).join('');
+
+  // Conferma e storico locale
+  function mostraGrazie(voce) {
+    var c = categoria(voce.categoria);
+    $('grazie-titolo').textContent = 'Grazie, ' + voce.nome.split(' ')[0] + '!';
+    $('grazie-scelta').innerHTML = '<span class="icona">' + svgIcona(c) + '</span>' + esc(c.nome);
+    var tutte = ls.get(K_INVIATE) || [];
+    $('inviate').hidden = tutte.length < 2;
+    $('inviate-elenco').innerHTML = tutte.map(function (v) {
+      var cv = categoria(v.categoria);
+      return '<li><span>' + esc(v.nome) + '</span><span>' + esc(cv ? cv.nome : v.categoria) + '</span></li>';
+    }).join('');
+    $('foglio-modulo').hidden = true;
+    $('grazie').hidden = false;
+  }
+  var gia = ls.get(K_INVIATE) || [];
+  if (gia.length) mostraGrazie(gia[gia.length - 1]);
+
+  $('altro').addEventListener('click', function () {
+    $('modulo').reset();
+    $('grazie').hidden = true;
+    $('foglio-modulo').hidden = false;
+    $('f-nome').focus();
+  });
+
+  function errore(msg) {
+    var e = $('errore');
+    e.textContent = msg;
+    e.classList.toggle('visibile', !!msg);
+  }
+
+  // Invio
+  $('modulo').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    errore('');
+    var nome = $('f-nome').value.trim().replace(/\s+/g, ' ');
+    var scelta = document.querySelector('input[name="categoria"]:checked');
+    var note = $('f-note').value.trim();
+    if (!nome) { errore('Scrivi il tuo nome, così sappiamo per chi è il regalo.'); $('f-nome').focus(); return; }
+    if (!scelta) { errore('Scegli una categoria di regalo.'); document.querySelector('input[name="categoria"]').focus(); return; }
+    var c = categoria(scelta.value);
+    var bottone = $('invia');
+    bottone.disabled = true;
+    bottone.firstChild.textContent = 'Invio in corso… ';
+    var inviataIl = new Date().toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' });
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        Nome: nome,
+        Regalo: c.nome,
+        Note: note || '-',
+        'Inviata il': inviataIl,
+        _subject: 'Omiyage: ' + nome + ' vorrebbe ' + c.nome,
+        _template: 'table',
+        _honey: $('f-honey').value
+      })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) { return { ok: r.ok, data: data }; });
+    }).then(function (res) {
+      if (res.ok && String(res.data.success) === 'true') {
+        var voce = { nome: nome, categoria: c.id, at: inviataIl };
+        var tutte = ls.get(K_INVIATE) || [];
+        tutte.push(voce);
+        ls.set(K_INVIATE, tutte);
+        mostraGrazie(voce);
+        $('grazie').focus();
+      } else if (/activat/i.test(res.data.message || '')) {
+        errore("Il modulo non è ancora attivo: deve essere confermato dall'email di FormSubmit. Riprova tra poco.");
+      } else {
+        errore('Invio non riuscito. Controlla la connessione e riprova.');
+      }
+    }).catch(function () {
+      errore('Invio non riuscito. Controlla la connessione e riprova.');
+    }).then(function () {
+      bottone.disabled = false;
+      bottone.firstChild.textContent = 'Registrati ';
+    });
+  });
+})();
+</script>
+</body>
+</html>
