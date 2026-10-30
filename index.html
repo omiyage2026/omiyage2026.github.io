@@ -82,7 +82,7 @@ body {
 .pagina {
   position: relative;
   z-index: 1;
-  max-width: 760px;
+  max-width: 840px;
   margin: 0 auto;
   padding: max(28px, env(safe-area-inset-top)) 16px 40px;
 }
@@ -235,7 +235,13 @@ input[type="text"]::placeholder, textarea::placeholder { color: var(--segnaposto
 input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--momiji); background: var(--carta); box-shadow: 0 0 0 4px var(--fuoco); }
 fieldset { border: 0; padding: 0; margin: 0 0 26px; min-width: 0; }
 legend { padding: 0; }
-.categorie { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.gruppo { display: flex; align-items: center; gap: 10px; margin: 6px 0 10px; font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--cenere); }
+.gruppo .jp { font-family: var(--serif); font-weight: 700; color: var(--momiji); letter-spacing: .08em; text-transform: none; }
+.gruppo::after { content: ""; flex: 1; height: 1px; background: var(--linea); }
+[role="group"] + [role="group"] .gruppo { margin-top: 22px; }
+.categorie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.oppure { display: flex; align-items: center; gap: 12px; margin: 18px 0 10px; font-size: 13px; color: var(--cenere); }
+.oppure::before, .oppure::after { content: ""; flex: 1; height: 1px; background: var(--linea); }
 .categoria { position: relative; display: block; cursor: pointer; }
 .categoria input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .card {
@@ -261,8 +267,11 @@ legend { padding: 0; }
   transition: background .2s, color .2s;
 }
 .card .icona svg { width: 22px; height: 22px; }
+.card .testo { display: flex; flex-direction: column; gap: 4px; }
 .card b { font-size: 15px; line-height: 1.25; }
-.card span:last-child { font-size: 13px; line-height: 1.4; color: var(--cenere); }
+.card .testo span { font-size: 13px; line-height: 1.4; color: var(--cenere); }
+.larga .card { flex-direction: row; align-items: center; gap: 14px; border-style: dashed; }
+.larga input:checked + .card { border-style: solid; }
 .categoria input:checked + .card { border-color: var(--momiji); background: #FDF4EE; box-shadow: 0 0 0 3px var(--fuoco); }
 .categoria input:checked + .card .icona { background: var(--momiji); color: var(--carta); }
 .honey { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -301,12 +310,13 @@ footer { margin-top: 36px; text-align: center; color: var(--cenere); font-size: 
 footer .sigillo { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-bottom: 8px; border-radius: 6px; background: var(--momiji); color: var(--carta); font-family: var(--serif); font-weight: 800; font-size: 17px; transform: rotate(-5deg); }
 footer p { margin: 0; }
 
+@media (max-width: 760px) {
+  .categorie { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 600px) {
   .passi { grid-template-columns: 1fr; }
   .passi li { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: baseline; }
   .passi .num { grid-row: span 2; margin: 0; }
-  .categorie { grid-template-columns: repeat(2, 1fr); }
-  .categoria:last-child { grid-column: 1 / -1; }
   .scheda { padding: 12px 16px; font-size: 14px; }
   .invio .bottone { width: 100%; }
   .cose .jp { font-size: 36px; }
@@ -348,7 +358,7 @@ footer p { margin: 0; }
       </div>
       <ol class="passi">
         <li><span class="num" aria-hidden="true">一</span><b>Scrivi il tuo nome</b><span>Così sappiamo per chi è il regalo.</span></li>
-        <li><span class="num" aria-hidden="true">二</span><b>Scegli una categoria</b><span>Cucina, Studio Ghibli, souvenir classici e altro.</span></li>
+        <li><span class="num" aria-hidden="true">二</span><b>Scegli una categoria</b><span>Dolci, tè, portafortuna, anime e molto altro.</span></li>
         <li><span class="num" aria-hidden="true">三</span><b>Al resto pensiamo noi</b><span>Lo cerchiamo in viaggio e te lo portiamo al ritorno.</span></li>
       </ol>
       <div class="azioni">
@@ -370,11 +380,11 @@ footer p { margin: 0; }
         </div>
         <fieldset>
           <legend class="etichetta">Che tipo di regalo ti piacerebbe?</legend>
-          <div class="categorie" id="categorie"></div>
+          <div id="categorie"></div>
         </fieldset>
         <div class="campo">
           <label class="etichetta" for="f-note">Qualche dettaglio in più? <small>(facoltativo)</small></label>
-          <textarea id="f-note" name="note" maxlength="400" placeholder="Il tuo film Ghibli preferito, gusti, allergie, cose che hai già…"></textarea>
+          <textarea id="f-note" name="note" maxlength="400" placeholder="Il tuo personaggio preferito, gusti, allergie, cose che hai già…"></textarea>
         </div>
         <div class="honey" aria-hidden="true">
           <label for="f-honey">Lascia vuoto</label>
@@ -421,25 +431,39 @@ footer p { margin: 0; }
 
   var FOGLIA = 'M-7.7,6.4 C-10.4,9.7 -18.9,8.4 -21.6,7.9 C-19.9,5.7 -14.2,-0.7 -20.0,1.0 C-21.6,1.9 -31.0,-5.5 -34.0,-8.5 C-30.0,-9.7 -18.2,-11.8 -16.8,-10.9 C-23.4,-15.2 -27.1,-30.1 -27.7,-35.5 C-22.6,-33.6 -9.1,-26.4 -6.5,-18.9 C-10.1,-29.3 -3.1,-44.9 0.0,-50.0 C3.1,-44.9 10.1,-29.3 6.5,-18.9 C9.1,-26.4 22.6,-33.6 27.7,-35.5 C27.1,-30.1 23.4,-15.2 16.8,-10.9 C18.2,-11.8 30.0,-9.7 34.0,-8.5 C31.0,-5.5 21.6,1.9 20.0,1.0 C14.2,-0.7 19.9,5.7 21.6,7.9 C18.9,8.4 10.4,9.7 7.7,6.4 Z';
 
-  // Icone a tratto, 24x24
+  // Gruppi del modulo, in ordine di comparsa
+  var GRUPPI = [
+    { id: 'tradizione', jp: '伝統', nome: 'Tradizione e sapori' },
+    { id: 'pop', jp: 'ポップ', nome: 'Anime, manga e kawaii' }
+  ];
+
+  // Categorie dalle piu' richieste alle meno richieste dentro ogni gruppo. Icone a tratto, 24x24
   var CATEGORIE = [
-    { id: 'cucina', nome: 'Cucina', desc: 'Bacchette, ciotole, utensili e ingredienti',
-      icona: '<path d="M3 12h18a9 9 0 0 1-18 0Z"/><path d="M9 21h6"/><path d="M13 3l-3 7M19 4l-5 6"/>' },
-    { id: 'ghibli', nome: 'Studio Ghibli', desc: 'Peluche e oggetti dai film di Miyazaki',
-      icona: '<path d="M4.5 10.5C4.5 7 7.8 5 12 5s7.5 2 7.5 5.5Z"/><path d="M12 5c0-1.2.6-2 1.6-2.4"/><path d="M6.5 10.5c.3 5.6 2.6 10 5.5 10s5.2-4.4 5.5-10"/><path d="M8.5 8l2-2.6M12 8.5 13.8 5.4M15.5 8.4l.9-2.2"/>' },
-    { id: 'classici', nome: 'Souvenir classici', desc: 'Maneki-neko, daruma, omamori, fūrin',
-      icona: '<path d="M12 3c-4.6 0-7 3.6-7 8.5S8 21 12 21s7-4.6 7-9.5S16.6 3 12 3Z"/><ellipse cx="12" cy="10" rx="3.6" ry="3"/><path d="M8.5 17h7"/>' },
-    { id: 'dolci', nome: 'Dolci e snack', desc: 'KitKat ai gusti giapponesi, wagashi, caramelle',
+    { id: 'dolci', gruppo: 'tradizione', nome: 'Dolci e snack', desc: 'KitKat ai gusti giapponesi, mochi, wagashi',
       icona: '<path d="M4 20 20 4"/><circle cx="9" cy="15" r="2.8"/><circle cx="13" cy="11" r="2.8"/><circle cx="17" cy="7" r="2.8"/>' },
-    { id: 'te', nome: 'Tè e sake', desc: 'Matcha, sencha, hōjicha o una bottiglia di sake',
+    { id: 'te', gruppo: 'tradizione', nome: 'Tè e matcha', desc: 'Matcha, sencha, hōjicha e accessori per il tè',
       icona: '<path d="M5 10h12l-1.4 8.2A2 2 0 0 1 13.6 20H8.4a2 2 0 0 1-2-1.8Z"/><path d="M17 12.5h1.5a2 2 0 0 1 0 4H16.6"/><path d="M9 3.5c-1 1.2 1 2 0 3.3M13 3.5c-1 1.2 1 2 0 3.3"/>' },
-    { id: 'anime', nome: 'Anime e manga', desc: 'Figure, gadget e fumetti',
-      icona: '<path d="M4 5h16v11H10l-4 4v-4H4Z"/><path d="m12 7.5.9 1.9 2.1.3-1.5 1.4.4 2.1-1.9-1-1.9 1 .4-2.1L9 9.7l2.1-.3Z"/>' },
-    { id: 'cancelleria', nome: 'Cancelleria', desc: 'Penne, quaderni e washi tape',
-      icona: '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/><path d="m14.5 5.5 3 3"/>' },
-    { id: 'beauty', nome: 'Beauty e skincare', desc: 'Maschere, creme e cosmetici giapponesi',
+    { id: 'classici', gruppo: 'tradizione', nome: 'Portafortuna', desc: 'Maneki-neko, daruma, omamori, fūrin',
+      icona: '<path d="M12 3c-4.6 0-7 3.6-7 8.5S8 21 12 21s7-4.6 7-9.5S16.6 3 12 3Z"/><ellipse cx="12" cy="10" rx="3.6" ry="3"/><path d="M8.5 17h7"/>' },
+    { id: 'cucina', gruppo: 'tradizione', nome: 'Cucina e tavola', desc: 'Bacchette, ciotole, ceramiche e utensili',
+      icona: '<path d="M3 12h18a9 9 0 0 1-18 0Z"/><path d="M9 21h6"/><path d="M13 3l-3 7M19 4l-5 6"/>' },
+    { id: 'beauty', gruppo: 'tradizione', nome: 'Beauty e skincare', desc: 'Maschere, creme e cosmetici giapponesi',
       icona: '<rect x="7" y="9" width="10" height="12" rx="2.5"/><path d="M10 9V6h4v3"/><path d="M12 6V3h4"/><path d="M10 14h4"/>' },
-    { id: 'sorpresa', nome: 'Sorprendetemi', desc: 'Scegliete voi, mi fido',
+    { id: 'cancelleria', gruppo: 'tradizione', nome: 'Cancelleria', desc: 'Penne, quaderni e washi tape',
+      icona: '<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/><path d="m14.5 5.5 3 3"/>' },
+    { id: 'sake', gruppo: 'tradizione', nome: 'Sake e whisky', desc: 'Sake, umeshu o whisky giapponese',
+      icona: '<path d="M10 3h4"/><path d="M10.5 3v3C8.3 7.6 7 10.2 7 13v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6c0-2.8-1.3-5.4-3.5-7V3"/><path d="M7 14.5h10"/>' },
+    { id: 'artigianato', gruppo: 'tradizione', nome: 'Artigianato e casa', desc: 'Furoshiki, tenugui, ventagli, incenso',
+      icona: '<path d="M12 20 3.6 9.4a13.5 13.5 0 0 1 16.8 0Z"/><path d="M12 20 8.5 7M12 20V6.5M12 20l3.5-13"/>' },
+    { id: 'anime', gruppo: 'pop', nome: 'Anime e manga', desc: 'Figure, fumetti e videogiochi',
+      icona: '<path d="M4 5h16v11H10l-4 4v-4H4Z"/><path d="m12 7.5.9 1.9 2.1.3-1.5 1.4.4 2.1-1.9-1-1.9 1 .4-2.1L9 9.7l2.1-.3Z"/>' },
+    { id: 'pokemon', gruppo: 'pop', nome: 'Pokémon', desc: 'Peluche e gadget dal Pokémon Center',
+      icona: '<path d="M13 2.5 5 13.5h6l-1 8 8-11h-6Z"/>' },
+    { id: 'sanrio', gruppo: 'pop', nome: 'Sanrio e kawaii', desc: 'Hello Kitty, My Melody, Kuromi e amici',
+      icona: '<path d="M12 12 4.6 7.6A1.4 1.4 0 0 0 2.5 8.8v6.4a1.4 1.4 0 0 0 2.1 1.2Z"/><path d="m12 12 7.4-4.4a1.4 1.4 0 0 1 2.1 1.2v6.4a1.4 1.4 0 0 1-2.1 1.2Z"/><circle cx="12" cy="12" r="2.2"/>' },
+    { id: 'ghibli', gruppo: 'pop', nome: 'Studio Ghibli', desc: 'Totoro, Kiki, Chihiro: peluche e oggetti dei film',
+      icona: '<path d="M4.5 10.5C4.5 7 7.8 5 12 5s7.5 2 7.5 5.5Z"/><path d="M12 5c0-1.2.6-2 1.6-2.4"/><path d="M6.5 10.5c.3 5.6 2.6 10 5.5 10s5.2-4.4 5.5-10"/><path d="M8.5 8l2-2.6M12 8.5 13.8 5.4M15.5 8.4l.9-2.2"/>' },
+    { id: 'sorpresa', nome: 'Sorprendetemi', desc: 'Non so scegliere: decidete voi, mi fido',
       icona: '<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8"/><path d="M12 8v12"/><path d="M12 8c-1.5-3.5-5.5-3.5-5-1 .3 1.3 2.8 1 5 1Zm0 0c1.5-3.5 5.5-3.5 5-1-.3 1.3-2.8 1-5 1Z"/>' }
   ];
 
@@ -514,21 +538,26 @@ footer p { margin: 0; }
   if (location.hash === '#regalo') apri('regalo');
 
   // Categorie del modulo
-  $('categorie').innerHTML = CATEGORIE.map(function (c) {
-    return '<label class="categoria"><input type="radio" name="categoria" value="' + c.id + '">' +
-      '<span class="card"><span class="icona">' + svgIcona(c) + '</span><b>' + esc(c.nome) + '</b><span>' + esc(c.desc) + '</span></span></label>';
-  }).join('');
+  function opzione(c, classe) {
+    return '<label class="categoria' + (classe ? ' ' + classe : '') + '"><input type="radio" name="categoria" value="' + c.id + '">' +
+      '<span class="card"><span class="icona">' + svgIcona(c) + '</span><span class="testo"><b>' + esc(c.nome) + '</b><span>' + esc(c.desc) + '</span></span></span></label>';
+  }
+  $('categorie').innerHTML = GRUPPI.map(function (g) {
+    return '<div role="group" aria-labelledby="gruppo-' + g.id + '">' +
+      '<p class="gruppo" id="gruppo-' + g.id + '"><span class="jp" aria-hidden="true">' + g.jp + '</span>' + esc(g.nome) + '</p>' +
+      '<div class="categorie">' + CATEGORIE.filter(function (c) { return c.gruppo === g.id; }).map(function (c) { return opzione(c); }).join('') + '</div></div>';
+  }).join('') + '<p class="oppure"><span>oppure</span></p>' + opzione(categoria('sorpresa'), 'larga');
 
   // Conferma e storico locale
   function mostraGrazie(voce) {
-    var c = categoria(voce.categoria);
+    var c = categoria(voce.categoria) || { nome: voce.regalo || voce.categoria, icona: categoria('sorpresa').icona };
     $('grazie-titolo').textContent = 'Grazie, ' + voce.nome.split(' ')[0] + '!';
     $('grazie-scelta').innerHTML = '<span class="icona">' + svgIcona(c) + '</span>' + esc(c.nome);
     var tutte = ls.get(K_INVIATE) || [];
     $('inviate').hidden = tutte.length < 2;
     $('inviate-elenco').innerHTML = tutte.map(function (v) {
       var cv = categoria(v.categoria);
-      return '<li><span>' + esc(v.nome) + '</span><span>' + esc(cv ? cv.nome : v.categoria) + '</span></li>';
+      return '<li><span>' + esc(v.nome) + '</span><span>' + esc(cv ? cv.nome : (v.regalo || v.categoria)) + '</span></li>';
     }).join('');
     $('foglio-modulo').hidden = true;
     $('grazie').hidden = false;
@@ -580,7 +609,7 @@ footer p { margin: 0; }
       return r.json().catch(function () { return {}; }).then(function (data) { return { ok: r.ok, data: data }; });
     }).then(function (res) {
       if (res.ok && String(res.data.success) === 'true') {
-        var voce = { nome: nome, categoria: c.id, at: inviataIl };
+        var voce = { nome: nome, categoria: c.id, regalo: c.nome, at: inviataIl };
         var tutte = ls.get(K_INVIATE) || [];
         tutte.push(voce);
         ls.set(K_INVIATE, tutte);
